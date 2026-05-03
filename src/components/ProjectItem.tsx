@@ -67,10 +67,11 @@ export const ProjectItem: React.FC<ProjectItemProps> = ({
           src={project.img}
           alt={project.title}
           draggable={false}
+          style={{ width: isCanvas ? (project.width || 280) : '100%' }}
           className={`
-            pointer-events-none select-none transition-filter duration-300
-            filter drop-shadow-xl group-hover:drop-shadow-2xl
-            ${isCanvas ? 'w-[200px] md:w-[280px] lg:w-[320px]' : 'w-full aspect-[4/5] object-contain p-8 bg-[--paper-light] rounded-2xl'}
+            pointer-events-none select-none transition-all duration-300
+            drop-shadow-[0_12px_24px_rgba(26,26,26,0.15)]
+            ${isCanvas ? '' : 'object-contain'}
           `}
         />
         {layout === 'grid' && (

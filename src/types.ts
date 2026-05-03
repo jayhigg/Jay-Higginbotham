@@ -10,6 +10,7 @@ export interface Project {
   y: number;
   rotate: number;
   scale: number;
+  width?: number;
   description?: string;
   brief?: string;
   role?: string;

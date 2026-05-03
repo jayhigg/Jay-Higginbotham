@@ -1,124 +1,142 @@
-import { motion, useMotionValue, useSpring, animate } from 'motion/react';
-import React, { useRef, useState, useEffect } from 'react';
+import { motion, useMotionValue, animate } from 'motion/react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 
 interface DraggableCanvasProps {
   children: React.ReactNode;
   disabled?: boolean;
   onReset?: (fn: () => void) => void;
+  onDragStart?: () => void; // optional: parent can hide hover cards while dragging
 }
+
+const DRAG_THRESHOLD = 5; // px before a pointerdown becomes a drag
 
 export const DraggableCanvas: React.FC<DraggableCanvasProps> = ({
   children,
   disabled = false,
   onReset,
+  onDragStart,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  // Soft springs for smoother feel if needed, but manual drag is usually 1:1
-  const springConfig = { stiffness: 400, damping: 40 };
-  const sx = useSpring(x, springConfig);
-  const sy = useSpring(y, springConfig);
-
   const [isDragging, setIsDragging] = useState(false);
-  const startPos = useRef({ x: 0, y: 0 });
-  const lastUpdate = useRef({ time: Date.now(), x: 0, y: 0 });
+  const pointerDown = useRef(false);
+  const dragStarted = useRef(false);
+  const startClient = useRef({ x: 0, y: 0 });
+  const startMotion = useRef({ x: 0, y: 0 });
+  const lastSample = useRef({ time: 0, x: 0, y: 0 });
   const velocity = useRef({ x: 0, y: 0 });
 
+  // expose reset
   useEffect(() => {
-    if (onReset) {
-      onReset(() => {
-        animate(x, 0, { duration: 0.6, ease: 'easeInOut' });
-        animate(y, 0, { duration: 0.6, ease: 'easeInOut' });
-      });
-    }
+    if (!onReset) return;
+    onReset(() => {
+      animate(x, 0, { duration: 0.6, ease: [0.32, 0.72, 0, 1] });
+      animate(y, 0, { duration: 0.6, ease: [0.32, 0.72, 0, 1] });
+    });
   }, [onReset, x, y]);
 
-  const handlePointerDown = (e: React.PointerEvent) => {
+  // when entering grid mode, snap motion values back to 0 so re-entering canvas doesn't jump
+  useEffect(() => {
+    if (disabled) {
+      x.set(0);
+      y.set(0);
+    }
+  }, [disabled, x, y]);
+
+  const handlePointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     if (disabled) return;
-    setIsDragging(true);
-    startPos.current = { x: e.clientX - x.get(), y: e.clientY - y.get() };
-    lastUpdate.current = { time: Date.now(), x: x.get(), y: y.get() };
-    
-    // Stop any ongoing inertia
+    pointerDown.current = true;
+    dragStarted.current = false;
+    startClient.current = { x: e.clientX, y: e.clientY };
+    startMotion.current = { x: x.get(), y: y.get() };
+    lastSample.current = { time: performance.now(), x: x.get(), y: y.get() };
+    velocity.current = { x: 0, y: 0 };
     x.stop();
     y.stop();
-  };
+  }, [disabled, x, y]);
 
-  const handlePointerMove = (e: React.PointerEvent) => {
-    if (!isDragging || disabled) return;
-    
-    const now = Date.now();
-    const dt = now - lastUpdate.current.time;
-    
-    const nextX = e.clientX - startPos.current.x;
-    const nextY = e.clientY - startPos.current.y;
-    
-    // Clamp to generous box
-    const clampedX = Math.max(-2000, Math.min(500, nextX));
-    const clampedY = Math.max(-1500, Math.min(500, nextY));
+  const handlePointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (!pointerDown.current || disabled) return;
+    const dx = e.clientX - startClient.current.x;
+    const dy = e.clientY - startClient.current.y;
 
-    if (dt > 0) {
-      velocity.current = {
-        x: (clampedX - lastUpdate.current.x) / dt,
-        y: (clampedY - lastUpdate.current.y) / dt,
-      };
+    // commit to drag only after threshold
+    if (!dragStarted.current) {
+      if (Math.hypot(dx, dy) < DRAG_THRESHOLD) return;
+      dragStarted.current = true;
+      setIsDragging(true);
+      onDragStart?.();
+      // capture pointer so drag survives leaving the window
+      e.currentTarget.setPointerCapture(e.pointerId);
     }
 
-    x.set(clampedX);
-    y.set(clampedY);
-    
-    lastUpdate.current = { time: now, x: clampedX, y: clampedY };
-  };
+    const nextX = startMotion.current.x + dx;
+    const nextY = startMotion.current.y + dy;
 
-  const handlePointerUp = () => {
-    if (!isDragging || disabled) return;
+    // sample velocity in px/sec for inertia
+    const now = performance.now();
+    const dt = now - lastSample.current.time;
+    if (dt > 0) {
+      velocity.current = {
+        x: ((nextX - lastSample.current.x) / dt) * 1000,
+        y: ((nextY - lastSample.current.y) / dt) * 1000,
+      };
+      lastSample.current = { time: now, x: nextX, y: nextY };
+    }
+
+    x.set(nextX);
+    y.set(nextY);
+  }, [disabled, x, y, onDragStart]);
+
+  const endPointer = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (!pointerDown.current) return;
+    pointerDown.current = false;
+
+    if (dragStarted.current) {
+      // release drag with proper inertia (velocity-driven, not target-driven)
+      animate(x, x.get(), {
+        type: 'inertia',
+        velocity: velocity.current.x,
+        power: 0.7,
+        timeConstant: 400,
+        min: -3000,
+        max: 3000,
+        bounceStiffness: 200,
+        bounceDamping: 30,
+      });
+      animate(y, y.get(), {
+        type: 'inertia',
+        velocity: velocity.current.y,
+        power: 0.7,
+        timeConstant: 400,
+        min: -2500,
+        max: 2500,
+        bounceStiffness: 200,
+        bounceDamping: 30,
+      });
+      try { e.currentTarget.releasePointerCapture(e.pointerId); } catch {}
+    }
     setIsDragging(false);
-
-    // Apply momentum with inertia
-    const inertiaPower = 0.6;
-    const vX = velocity.current.x * 200;
-    const vY = velocity.current.y * 200;
-
-    animate(x, x.get() + vX * inertiaPower, {
-      type: 'inertia',
-      power: inertiaPower,
-      bounceStiffness: 200,
-      bounceDamping: 20,
-      min: -2000,
-      max: 500,
-    });
-
-    animate(y, y.get() + vY * inertiaPower, {
-      type: 'inertia',
-      power: inertiaPower,
-      bounceStiffness: 200,
-      bounceDamping: 20,
-      min: -1500,
-      max: 500,
-    });
-  };
+    dragStarted.current = false;
+  }, [x, y]);
 
   return (
     <div
       ref={containerRef}
-      className={`fixed inset-0 overflow-hidden ${disabled ? 'overflow-y-auto' : 'cursor-grab active:cursor-grabbing'}`}
+      className={`fixed inset-0 overflow-hidden ${
+        disabled ? 'overflow-y-auto' : isDragging ? 'canvas-cursor-active' : 'canvas-cursor'
+      }`}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
-      onPointerLeave={handlePointerUp}
+      onPointerUp={endPointer}
+      onPointerCancel={endPointer}
       style={{ touchAction: 'none' }}
     >
       <motion.div
-        style={{
-          x: disabled ? 0 : sx,
-          y: disabled ? 0 : sy,
-          width: '100%',
-          height: '100%',
-          position: 'relative',
-        }}
+        // CRITICAL: render directly off raw motion values, no spring in between
+        style={{ x: disabled ? 0 : x, y: disabled ? 0 : y, width: '100%', height: '100%', position: 'relative' }}
         className={disabled ? 'p-12 pb-32 h-auto' : ''}
       >
         {children}

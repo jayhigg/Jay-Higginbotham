@@ -9,7 +9,7 @@ const RAW_PROJECTS: Omit<Project, 'img'>[] = [
     client: "Packs Light Co.", 
     year: 2024, 
     type: "patch", 
-    x: -820, y: -450, rotate: -4, scale: 1.05, width: 280
+    x: -1230, y: -675, rotate: -4, scale: 1.05, width: 280
   },
   { 
     id: 2, 
@@ -18,7 +18,7 @@ const RAW_PROJECTS: Omit<Project, 'img'>[] = [
     client: "Packs Light Co.", 
     year: 2024, 
     type: "patch", 
-    x: -340, y: -520, rotate: 3, scale: 0.95, width: 340
+    x: -510, y: -780, rotate: 3, scale: 0.95, width: 340
   },
   { 
     id: 3, 
@@ -27,7 +27,7 @@ const RAW_PROJECTS: Omit<Project, 'img'>[] = [
     client: "Packs Light Co.", 
     year: 2023, 
     type: "patch", 
-    x: 180, y: -580, rotate: -2, scale: 1.1, width: 260
+    x: 270, y: -870, rotate: -2, scale: 1.1, width: 260
   },
   { 
     id: 4, 
@@ -36,7 +36,7 @@ const RAW_PROJECTS: Omit<Project, 'img'>[] = [
     client: "Packs Light Co.", 
     year: 2025, 
     type: "patch", 
-    x: 640, y: -420, rotate: 5, scale: 1, width: 300
+    x: 960, y: -630, rotate: 5, scale: 1, width: 300
   },
   { 
     id: 5, 
@@ -45,7 +45,7 @@ const RAW_PROJECTS: Omit<Project, 'img'>[] = [
     client: "Packs Light Co.", 
     year: 2024, 
     type: "patch", 
-    x: -620, y: -180, rotate: 2, scale: 0.9, width: 260
+    x: -930, y: -270, rotate: 2, scale: 0.9, width: 260
   },
   { 
     id: 6, 
@@ -54,7 +54,7 @@ const RAW_PROJECTS: Omit<Project, 'img'>[] = [
     client: "Turtlebox", 
     year: 2024, 
     type: "patch", 
-    x: -180, y: -240, rotate: -3, scale: 1.05, width: 280
+    x: -270, y: -360, rotate: -3, scale: 1.05, width: 280
   },
   { 
     id: 7, 
@@ -63,7 +63,7 @@ const RAW_PROJECTS: Omit<Project, 'img'>[] = [
     client: "Turtlebox", 
     year: 2023, 
     type: "patch", 
-    x: 320, y: -160, rotate: -6, scale: 0.95, width: 320
+    x: 480, y: -240, rotate: -6, scale: 0.95, width: 320
   },
   { 
     id: 8, 
@@ -72,7 +72,7 @@ const RAW_PROJECTS: Omit<Project, 'img'>[] = [
     client: "Turtlebox", 
     year: 2025, 
     type: "hat", 
-    x: 840, y: -220, rotate: 1, scale: 1.15, width: 320
+    x: 1260, y: -330, rotate: 1, scale: 1.15, width: 320
   },
   { 
     id: 9, 
@@ -81,7 +81,7 @@ const RAW_PROJECTS: Omit<Project, 'img'>[] = [
     client: "Turtlebox", 
     year: 2024, 
     type: "patch", 
-    x: -940, y: 80, rotate: 5, scale: 1, width: 270
+    x: -1410, y: 120, rotate: 5, scale: 1, width: 270
   },
   { 
     id: 10, 
@@ -90,7 +90,7 @@ const RAW_PROJECTS: Omit<Project, 'img'>[] = [
     client: "Turtlebox", 
     year: 2023, 
     type: "patch", 
-    x: -480, y: 120, rotate: -2, scale: 0.85, width: 310
+    x: -720, y: 180, rotate: -2, scale: 0.85, width: 310
   },
   { 
     id: 11, 
@@ -99,7 +99,7 @@ const RAW_PROJECTS: Omit<Project, 'img'>[] = [
     client: "Turtlebox", 
     year: 2024, 
     type: "patch", 
-    x: 40, y: 40, rotate: 8, scale: 1.05, width: 290
+    x: 60, y: 60, rotate: 8, scale: 1.05, width: 290
   },
   { 
     id: 12, 
@@ -108,7 +108,7 @@ const RAW_PROJECTS: Omit<Project, 'img'>[] = [
     client: "Turtlebox", 
     year: 2024, 
     type: "hat", 
-    x: 460, y: 140, rotate: -4, scale: 1.1, width: 320
+    x: 690, y: 210, rotate: -4, scale: 1.1, width: 320
   },
   { 
     id: 13, 
@@ -117,7 +117,7 @@ const RAW_PROJECTS: Omit<Project, 'img'>[] = [
     client: "Turtlebox", 
     year: 2025, 
     type: "hat", 
-    x: 920, y: 180, rotate: 0, scale: 1.15, width: 320
+    x: 1380, y: 270, rotate: 0, scale: 1.15, width: 320
   },
   { 
     id: 14, 
@@ -126,7 +126,7 @@ const RAW_PROJECTS: Omit<Project, 'img'>[] = [
     client: "Turtlebox", 
     year: 2024, 
     type: "hat", 
-    x: -780, y: 420, rotate: -7, scale: 1, width: 320
+    x: -1170, y: 630, rotate: -7, scale: 1, width: 320
   },
   { 
     id: 15, 
@@ -135,7 +135,7 @@ const RAW_PROJECTS: Omit<Project, 'img'>[] = [
     client: "Turtlebox", 
     year: 2025, 
     type: "hat", 
-    x: -260, y: 480, rotate: 4, scale: 1.05, width: 320
+    x: -390, y: 720, rotate: 4, scale: 1.05, width: 320
   },
   { 
     id: 16, 
@@ -144,7 +144,7 @@ const RAW_PROJECTS: Omit<Project, 'img'>[] = [
     client: "Turtlebox", 
     year: 2024, 
     type: "hat", 
-    x: 240, y: 360, rotate: -5, scale: 0.95, width: 320
+    x: 360, y: 540, rotate: -5, scale: 0.95, width: 320
   },
   { 
     id: 17, 
@@ -153,7 +153,7 @@ const RAW_PROJECTS: Omit<Project, 'img'>[] = [
     client: "Turtlebox", 
     year: 2025, 
     type: "hat", 
-    x: 680, y: 460, rotate: 6, scale: 1.1, width: 320
+    x: 1020, y: 690, rotate: 6, scale: 1.1, width: 320
   },
   { 
     id: 18, 
@@ -162,7 +162,7 @@ const RAW_PROJECTS: Omit<Project, 'img'>[] = [
     client: "Turtlebox", 
     year: 2023, 
     type: "patch", 
-    x: -540, y: 640, rotate: -2, scale: 0.9, width: 320
+    x: -810, y: 960, rotate: -2, scale: 0.9, width: 320
   },
   { 
     id: 19, 
@@ -171,7 +171,7 @@ const RAW_PROJECTS: Omit<Project, 'img'>[] = [
     client: "Turtlebox", 
     year: 2024, 
     type: "sketch", 
-    x: 60, y: 680, rotate: 1, scale: 1.1, width: 280
+    x: 90, y: 1020, rotate: 1, scale: 1.1, width: 280
   },
   { 
     id: 20, 
@@ -180,7 +180,7 @@ const RAW_PROJECTS: Omit<Project, 'img'>[] = [
     client: "Turtlebox", 
     year: 2024, 
     type: "patch", 
-    x: 580, y: 650, rotate: -3, scale: 1.05, width: 300
+    x: 870, y: 975, rotate: -3, scale: 1.05, width: 300
   },
   { 
     id: 21, 
@@ -189,11 +189,12 @@ const RAW_PROJECTS: Omit<Project, 'img'>[] = [
     client: "Turtlebox", 
     year: 2025, 
     type: "patch", 
-    x: -1100, y: 200, rotate: 8, scale: 0.9, width: 280
+    x: -1650, y: 300, rotate: 8, scale: 0.9, width: 280
   }
 ];
 
 export const PROJECTS: Project[] = RAW_PROJECTS.map(p => ({
   ...p,
+  rotate: 0,
   img: generateProjectImage(p.id, p.type, p.title)
 } as Project));

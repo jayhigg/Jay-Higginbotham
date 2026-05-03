@@ -35,7 +35,7 @@ export default function App() {
     <div className="min-h-screen bg-[--paper] selection:bg-[--ink] selection:text-[--paper-light]">
       {/* Navbar */}
       <nav className="fixed top-0 inset-x-0 z-[100] px-8 lg:px-16 pt-8 pb-4 pointer-events-none">
-        <div className="flex justify-between items-center max-w-[1920px] mx-auto">
+        <div className="flex justify-between items-center max-w-[1920px] mx-auto relative">
           {/* Logo */}
           <button
             onClick={handleLogoClick}
@@ -45,7 +45,7 @@ export default function App() {
           </button>
 
           {/* Navigation Toggle */}
-          <div className="soft-card-flat p-1 flex gap-1 pointer-events-auto bg-[--paper-light]/80 backdrop-blur-md">
+          <div className="absolute left-1/2 -translate-x-1/2 soft-card-flat p-1 flex gap-1 pointer-events-auto bg-[--paper-light]/80 backdrop-blur-md">
             {navLinks.map((link) => (
               <button
                 key={link.view}
@@ -59,18 +59,18 @@ export default function App() {
               </button>
             ))}
           </div>
-
-          {/* CTA */}
-          <div className="hidden lg:block pointer-events-auto">
-            <SwapButton
-              label="Available for work"
-              variant="secondary"
-              italicWord="for work"
-              onClick={() => setCurrentView('contact')}
-            />
-          </div>
         </div>
       </nav>
+
+      {/* CTA Bottom Right */}
+      <div className="fixed bottom-8 right-8 z-[100] hidden lg:block pointer-events-auto">
+        <SwapButton
+          label="Available for work"
+          variant="secondary"
+          italicWord="for work"
+          onClick={() => setCurrentView('contact')}
+        />
+      </div>
 
       {/* Main Content */}
       <main className={`${currentView !== 'index' ? 'overflow-y-auto no-scrollbar' : 'h-screen overflow-hidden'}`}>

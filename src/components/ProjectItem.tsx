@@ -10,7 +10,7 @@ interface ProjectItemProps {
   index: number;
 }
 
-export const ProjectItem: React.FC<ProjectItemProps> = ({
+export const ProjectItem = React.memo<ProjectItemProps>(({
   project,
   layout,
   onHover,
@@ -41,6 +41,7 @@ export const ProjectItem: React.FC<ProjectItemProps> = ({
   return (
     <motion.div
       layout
+      layoutDependency={layout}
       layoutId={`project-${project.id}`}
       style={isCanvas ? { position: 'absolute', ...canvasStyle } : gridStyle}
       transition={{
@@ -62,6 +63,7 @@ export const ProjectItem: React.FC<ProjectItemProps> = ({
           transition: { type: 'spring', stiffness: 300, damping: 20 },
         }}
         className="relative"
+        onDragStart={(e) => e.preventDefault()}
       >
         <img
           src={project.img}
@@ -83,4 +85,4 @@ export const ProjectItem: React.FC<ProjectItemProps> = ({
       </motion.div>
     </motion.div>
   );
-};
+});
